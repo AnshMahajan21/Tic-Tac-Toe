@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #ffd670;
+    text-align: center;
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    height: 70vh;
+    width: 550px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.box {
+    height: 140px;
+    width: 140px;
+    background-color: #e9ff70;
+    /*color: #ff70a6;*/
+    margin: 15px 15px 15px 15px;
+    border-radius: 15%;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+    font-size: 100px;
+    font-weight: bold;
+    font-family: "Montserrat";
+}
+
+#resetbtn {
+    margin-top: 25px;
+    height: 50px;
+    width: 115px;
+    border-radius: 15%;
+    border: none;
+    background-color: #e9ff70;
+    color: #ff70a6;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: "Montserrat";
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+}
+
+#newgamebtn {
+    height: 50px;
+    width: 115px;
+    border-radius: 15%;
+    border: none;
+    background-color: #e9ff70;
+    color: #ff70a6;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: "Montserrat";
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+}
+
+.turnx {
+    color: #ff70a6;
+}
+
+.turno {
+    color: #70d6ff;
+}
+
+#msg {
+    color: #70d6ff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: "Montserrat";
+    padding-top: 15px;
+}
+
+.btns {
+    display: flex;
+    max-width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 25px;
+}
+
+.hide {
+    display: none;
+}
