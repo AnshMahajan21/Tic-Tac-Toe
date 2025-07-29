@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +10,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
 </head>
-
 <body>
     <h1>Tic Tac Toe</h1>
+    
+    <!-- Main mode selection -->
+    <div class="game-mode" id="main-mode-selection">
+        <button id="human-mode" class="mode-btn active">Human vs Human</button>
+        <button id="ai-mode" class="mode-btn">Human vs AI</button>
+    </div>
+
+    <!-- AI difficulty selection (hidden initially) -->
+    <div class="ai-difficulty-selection hide" id="ai-difficulty-selection">
+        <p class="difficulty-title">Choose AI Difficulty:</p>
+        <div class="difficulty-buttons">
+            <button id="ai-easy" class="difficulty-btn easy">Easy</button>
+            <button id="ai-medium" class="difficulty-btn medium">Medium</button>
+            <button id="ai-hard" class="difficulty-btn hard">Hard</button>
+        </div>
+        <button id="back-to-modes" class="back-btn">← Back to Game Modes</button>
+    </div>
+
+    <div id="game-info" class="game-info">
+        <p>Game 1 - Player O starts</p>
+    </div>
+
+    <div id="turn-indicator" class="turn-indicator">
+        Player O's Turn
+    </div>
+    
+    <!-- Your existing elements -->
     <div class="winmsg hide">
         <p id="msg">Winner</p>
     </div>
@@ -39,5 +64,4 @@
     </div>
     <script src="app.js"></script>
 </body>
-
 </html>
