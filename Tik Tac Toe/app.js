@@ -1,4 +1,3 @@
-// declared variables
 let boxes = document.querySelectorAll(".box")
 let resetbtn = document.querySelector("#resetbtn")
 let newgamebtn = document.querySelector("#newgamebtn")
@@ -6,8 +5,9 @@ let winmsg = document.querySelector(".winmsg")
 let msg = document.querySelector("#msg")
 let turnO = true
 let count = 0
-winner = false
-let gameMode = 'human'; // 'human' or 'ai'
+let winner = false
+let gameMode = 'human'; 
+let aiDifficulty = 'easy';
 let gameStats = {
     humanWins: 0,
     aiWins: 0,
@@ -15,7 +15,6 @@ let gameStats = {
     gamesPlayed: 0
 };
 
-//Winning Conditions 
 const winpatterns = [
     [0, 1, 2],
     [0, 3, 6],
@@ -27,56 +26,94 @@ const winpatterns = [
     [6, 7, 8]
 ];
 
+const showMainModes = () => {
+    document.getElementById('main-mode-selection').classList.remove('hide');
+    document.getElementById('ai-difficulty-selection').classList.add('hide');
+}
+
+const showDifficultySelection = () => {
+    document.getElementById('main-mode-selection').classList.add('hide');
+    document.getElementById('ai-difficulty-selection').classList.remove('hide');
+}
+
 document.getElementById('human-mode').addEventListener('click', () => {
     setGameMode('human');
 });
 
 document.getElementById('ai-mode').addEventListener('click', () => {
-    setGameMode('ai');
+    showDifficultySelection();
+});
+
+document.getElementById('ai-easy').addEventListener('click', () => {
+    setGameMode('ai-easy');
+});
+
+document.getElementById('ai-medium').addEventListener('click', () => {
+    setGameMode('ai-medium');
+});
+
+document.getElementById('ai-hard').addEventListener('click', () => {
+    setGameMode('ai-hard');
+});
+
+document.getElementById('back-to-modes').addEventListener('click', () => {
+    showMainModes();
+    setGameMode('human');
 });
 
 const setGameMode = (mode) => {
     gameMode = mode;
-    
-    // Update button appearance
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(mode + '-mode').classList.add('active');
+    document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
     
-    // Reset stats and start new game
+    if (mode === 'human') {
+        document.getElementById('human-mode').classList.add('active');
+        showMainModes();
+    } else if (mode.startsWith('ai-')) {
+        aiDifficulty = mode.split('-')[1];
+        document.getElementById('ai-mode').classList.add('active');
+        document.getElementById(mode).classList.add('active');
+    }
+    
     gameStats = { humanWins: 0, aiWins: 0, draws: 0, gamesPlayed: 0 };
     resetgame();
 }
 
 const checkWinnerForAI = (board) => {
-    for (let pattern of winpatterns) {
-        let val1 = board[pattern[0]];
-        let val2 = board[pattern[1]];
-        let val3 = board[pattern[2]];
-        
-        if (val1 !== '' && val1 === val2 && val2 === val3) {
-            return val1;
+    const patterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    for (let pattern of patterns) {
+        const [a, b, c] = pattern;
+        if (board[a] !== '' && board[a] === board[b] && board[b] === board[c]) {
+            return board[a];
         }
     }
     return null;
 };
 
-const isBoardFull = (board) => {
-    return board.every(cell => cell !== '');
-};
+const isBoardFull = (board) => board.every(cell => cell !== '');
+
 
 const minimax = (board, depth, isMaximizing) => {
     const result = checkWinnerForAI(board);
-    
-    // AI is X, Human is O in AI mode
-    if (result === 'O') return -10 + depth; 
-    if (result === 'X') return 10 - depth;  
+    if (result === 'X') return 10 - depth;
+    if (result === 'O') return depth - 10;
     if (isBoardFull(board)) return 0;
-    
+
     if (isMaximizing) {
         let bestScore = -Infinity;
         for (let i = 0; i < 9; i++) {
             if (board[i] === '') {
-                board[i] = 'X'; 
+                board[i] = 'X';
                 let score = minimax(board, depth + 1, false);
                 board[i] = '';
                 bestScore = Math.max(score, bestScore);
@@ -87,7 +124,7 @@ const minimax = (board, depth, isMaximizing) => {
         let bestScore = Infinity;
         for (let i = 0; i < 9; i++) {
             if (board[i] === '') {
-                board[i] = 'O'; 
+                board[i] = 'O';
                 let score = minimax(board, depth + 1, true);
                 board[i] = '';
                 bestScore = Math.min(score, bestScore);
@@ -97,14 +134,65 @@ const minimax = (board, depth, isMaximizing) => {
     }
 };
 
-const getBestMove = () => {
+const getEasyMove = () => {
     let board = Array.from(boxes).map(box => box.innerText);
-    let bestScore = -Infinity;
-    let bestMove = 0;
+    let availableMoves = [];
     
     for (let i = 0; i < 9; i++) {
         if (board[i] === '') {
-            board[i] = 'X'; 
+            availableMoves.push(i);
+        }
+    }
+    
+    if (Math.random() < 0.3) {
+        return getBestMove();
+    } else {
+        return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    }
+};
+
+const getMediumMove = () => {
+    let board = Array.from(boxes).map(box => box.innerText);
+    
+    for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+            board[i] = 'O';
+            if (checkWinnerForAI(board) === 'O') {
+                return i;
+            }
+            board[i] = '';
+        }
+    }
+    
+    for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+            board[i] = 'X';
+            if (checkWinnerForAI(board) === 'X') {
+                return i;
+            }
+            board[i] = '';
+        }
+    }
+    
+    if (Math.random() < 0.6) {
+        return getBestMove();
+    } else {
+        let availableMoves = [];
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === '') availableMoves.push(i);
+        }
+        return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    }
+};
+
+const getBestMove = () => {
+    let board = Array.from(boxes).map(box => box.innerText);
+    let bestScore = -Infinity;
+    let bestMove = null;
+
+    for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+            board[i] = 'X';
             let score = minimax(board, 0, false);
             board[i] = '';
             if (score > bestScore) {
@@ -113,19 +201,35 @@ const getBestMove = () => {
             }
         }
     }
+
     return bestMove;
 };
 
+
 const makeAIMove = () => {
-    if (gameMode === 'ai' && turnO && !winner) { 
+    if (gameMode.startsWith('ai-') && !turnO && !winner) {
         setTimeout(() => {
-            const bestMove = getBestMove();
-            const aiBox = boxes[bestMove];
+            let aiMove;
             
+            switch (aiDifficulty) {
+                case 'easy':
+                    aiMove = getEasyMove();
+                    break;
+                case 'medium':
+                    aiMove = getMediumMove();
+                    break;
+                case 'hard':
+                    aiMove = getBestMove();
+                    break;
+                default:
+                    aiMove = getBestMove();
+            }
+            
+            const aiBox = boxes[aiMove];
             aiBox.innerText = "X";
             aiBox.classList.add("turnx");
             aiBox.disabled = true;
-            turnO = false; 
+            turnO = true;
             count++;
             
             updateTurnIndicator();
@@ -141,80 +245,73 @@ const makeAIMove = () => {
 const updateTurnIndicator = () => {
     const indicator = document.getElementById('turn-indicator');
     if (gameMode === 'human') {
-        indicator.textContent = turnO ? "Your Turn Player 1" : "Your Turn Player 2";
+        indicator.textContent = turnO ? "Player O's Turn" : "Player X's Turn";
     } else {
-        indicator.textContent = turnO ? "AI is thinking..." : "Your Turn Player 1";
+        indicator.textContent = turnO ? "Your Turn" : `AI (${aiDifficulty.toUpperCase()}) is thinking...`;
     }
 }
 
 const showGameInfo = () => {
     const gameInfo = document.getElementById('game-info');
+    let startingPlayer = '';
     
     if (gameMode === 'human') {
-        let startingPlayer = turnO ? 'Player 1 starts' : 'Player 2 starts';
+        startingPlayer = turnO ? 'Player O starts' : 'Player X starts';
         gameInfo.innerHTML = `<p>Game ${gameStats.gamesPlayed} - ${startingPlayer}</p>`;
     } else {
-        // In AI mode: show who starts and current score
-        let startingPlayer = turnO ? 'AI starts (2)' : 'You start (1)';
+        startingPlayer = turnO ? 'You start' : `AI (${aiDifficulty.toUpperCase()}) starts`;
         gameInfo.innerHTML = `
             <p>Game ${gameStats.gamesPlayed} - ${startingPlayer}</p>
-            <p>Score - You (1): ${gameStats.humanWins} | AI (2): ${gameStats.aiWins} | Draws: ${gameStats.draws}</p>
+            <p>Score - You: ${gameStats.humanWins} | AI: ${gameStats.aiWins} | Draws: ${gameStats.draws}</p>
         `;
     }
 }
 
 boxes.forEach((box) => {
     box.addEventListener("click", () => {
-        if (gameMode === 'ai' && turnO) return;
-        
-        if (gameMode === 'human') {
-            if (turnO) {
-                box.innerText = "O"
-                box.classList.remove("turnx")
-                box.classList.add("turno")
-                turnO = false
-            } else {
-                box.innerText = "X"
-                box.classList.remove("turno")
-                box.classList.add("turnx")
-                turnO = true
-            }
+        if (gameMode.startsWith('ai-') && !turnO) return;
+
+        if (gameMode.startsWith('ai-')) {
+            box.innerText = "O";
+            box.classList.add("turno");
+            turnO = false;
         } else {
-            box.innerText = "O"
-            box.classList.remove("turnx")
-            box.classList.add("turno")
-            turnO = true
+            if (turnO) {
+                box.innerText = "O";
+                box.classList.add("turno");
+            } else {
+                box.innerText = "X";
+                box.classList.add("turnx");
+            }
+            turnO = !turnO;
         }
-        
-        box.disabled = true
-        count++
-        
+
+        box.disabled = true;
+        count++;
+
         updateTurnIndicator();
         checkwinner();
-        
+
         if (count === 9 && !winner) {
-            drawgame()
+            drawgame();
         }
-        
-        if (gameMode === 'ai' && !winner && count < 9) {
+
+        if (gameMode.startsWith('ai-') && !winner && count < 9) {
             makeAIMove();
         }
-    })
+    });
 });
 
 const resetgame = () => {
     gameStats.gamesPlayed++;
     
-    // Alternate starting player every game
     if (gameMode === 'human') {
         turnO = gameStats.gamesPlayed % 2 === 1;
-    } else if (gameMode === 'ai') {
-        // In AI mode: decide who starts
-        const aiStartsFirst = gameStats.gamesPlayed % 2 === 1;
-        turnO = aiStartsFirst; // true = AI's turn, false = Human's turn
+    } else if (gameMode.startsWith('ai-')) {
+        const humanStartsFirst = gameStats.gamesPlayed % 2 === 1;
+        turnO = humanStartsFirst;
         
-        // If AI should start first, make AI move after a delay
-        if (aiStartsFirst) {
+        if (!humanStartsFirst) {
             setTimeout(() => {
                 makeAIMove();
             }, 1000);
@@ -245,14 +342,14 @@ const enableboxes = () => {
 }
 
 const showwinner = (winner) => {
-    if (gameMode === 'ai') {
-        if (winner === 'O') gameStats.humanWins++;
+    if (gameMode.startsWith('ai-')) {
+        if (winner === 'X') gameStats.humanWins++;
         else gameStats.aiWins++;
     }
     
     let message = '';
-    if (gameMode === 'ai') {
-        message = winner === 'O' ? 'Congratulations! You won!' : 'AI wins this time!';
+    if (gameMode.startsWith('ai-')) {
+        message = winner === 'O' ? 'Congratulations! You won!' : `AI (${aiDifficulty.toUpperCase()}) wins this time!`;
     } else {
         message = `Congratulations, Winner is ${winner}`;
     }
@@ -263,7 +360,7 @@ const showwinner = (winner) => {
 }
 
 const drawgame = () => {
-    if (gameMode === 'ai') gameStats.draws++;
+    if (gameMode.startsWith('ai-')) gameStats.draws++;
     msg.innerText = ("Game was a draw")
     winmsg.classList.remove("hide")
     disableboxes()
@@ -289,8 +386,10 @@ const checkwinner = () => {
 resetbtn.addEventListener("click", resetgame)
 newgamebtn.addEventListener("click", resetgame)
 
-// Initialize the display
 window.addEventListener("DOMContentLoaded", function() {
+    const audio = document.querySelector("#audio");
+    audio.play();
+    
     showGameInfo();
     updateTurnIndicator();
 });
