@@ -1,94 +1,168 @@
-* {
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #a8d2ff;
+    color: #333;
     margin: 0;
     padding: 0;
-}
-
-body {
-    background-color: #ffd670;
     text-align: center;
 }
 
-.game {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+h1 {
+    margin-top: 30px;
+    font-size: 2.5rem;
+    color: #2c3e50;
 }
 
-.container {
-    height: 70vh;
-    width: 550px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding-top: 10px;
+.game-mode,
+.ai-difficulty-selection {
+    margin: 20px auto;
 }
 
-.box {
-    height: 140px;
-    width: 140px;
-    background-color: #e9ff70;
-    /*color: #ff70a6;*/
-    margin: 15px 15px 15px 15px;
-    border-radius: 15%;
-    border: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
-    font-size: 100px;
-    font-weight: bold;
-    font-family: "Montserrat";
-}
-
-#resetbtn {
-    margin-top: 25px;
-    margin-bottom: 25px;
-    height: 50px;
-    width: 115px;
-    border-radius: 15%;
-    border: none;
-    background-color: #e9ff70;
-    color: #ff70a6;
+#ai-easy {
+    margin: 10px;
+    padding: 10px 20px;
     font-size: 1rem;
-    font-weight: bold;
-    font-family: "Montserrat";
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+    background-color: #17de52;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#ai-medium {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #ffa200;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#ai-hard {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #ff2828;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 #newgamebtn {
-    height: 50px;
-    width: 115px;
-    border-radius: 15%;
-    border: none;
-    background-color: #e9ff70;
-    color: #ff70a6;
+    margin-bottom: 20px;
+}
+
+#resetbtn {
+    margin-bottom: 10px;
+}
+
+.mode-btn,
+.back-btn {
+    margin: 10px;
+    padding: 10px 20px;
     font-size: 1rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.mode-btn.active,
+.difficulty-btn.active {
+    background-color: #2ecc71;
+}
+
+.mode-btn:hover,
+.difficulty-btn:hover,
+.back-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Game Board */
+.game {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+}
+
+.box {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
     font-weight: bold;
-    font-family: "Montserrat";
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+    border: 2px solid #34495e;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.box:hover {
+    background-color: #ecf0f1;
 }
 
 .turnx {
-    color: #ff70a6;
+    color: #ff513e;
 }
 
 .turno {
-    color: #70d6ff;
+    color: #00ff6a;
 }
 
-#msg {
-    color: #70d6ff;
+#turn-indicator,
+#game-info {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.winmsg {
+    margin-top: 20px;
     font-size: 1.5rem;
     font-weight: bold;
-    font-family: "Montserrat";
-    padding-top: 15px;
+    color: #2c3e50;
+}
+
+.winmsg p {
+    margin: 0;
+    padding: 10px;
+    background-color: #f1c40f;
+    display: inline-block;
+    border-radius: 6px;
 }
 
 .btns {
-    display: flex;
-    max-width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 25px;
+    margin-top: 20px;
+}
+
+.btns button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    background-color: #9b59b6;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btns button:hover {
+    background-color: #8e44ad;
 }
 
 .hide {
